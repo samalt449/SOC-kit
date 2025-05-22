@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Threat Intelligence{% endblock %}
+{% block content %}
+<div class="text-white">
+  <h2 class="mb-4">Threat Intelligence</h2>
+  <form method="POST" enctype="multipart/form-data" class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Query Type</label>
+      <select name="query_type" class="form-select">
+        <option value="auto" {% if selected_type=='auto' %}selected{% endif %}>Auto Detect</option>
+        <option value="ip" {% if selected_type=='ip' %}selected{% endif %}>IP</option>
+        <option value="domain" {% if selected_type=='domain' %}selected{% endif %}>Domain</option>
+        <option value="hash" {% if selected_type=='hash' %}selected{% endif %}>File Hash</option>
+        <option value="file" {% if selected_type=='file' %}selected{% endif %}>Upload File</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Query or File</label>
+      <input type="text" name="query" class="form-control" value="{{ query }}" placeholder="IP, domain, or hash">
+      <input type="file" name="file" class="form-control mt-2">
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100">Analyze</button>
+    </div>
+  </form>
+
+  {% if error_message %}
+    <div class="alert alert-danger mt-3">{{ error_message }}</div>
+  {% endif %}
+
+  {% if summaries %}
+    <h4 class="mt-5 text-info">Threat Intel Results</h4>
+    <div class="row">
+      {% for s in summaries %}
+      <div class="col-md-6">
+        <div class="card mb-3 border-{{ s.risk | lower }}">
+          <div class="card-header bg-dark text-white d-flex justify-content-between">
+            <strong>{{ s.source }}</strong>
+            <a href="{{ s.report_url }}" target="_blank" class="text-warning">View Report</a>
+          </div>
+          <div class="card-body">
+            <p class="mb-1"><strong>Status:</strong> {{ s.status }}</p>
+            <p><strong>Risk Level:</strong> <span class="badge bg-{{ 'danger' if s.risk == 'High' else 'warning' if s.risk == 'Medium' else 'success' }}">{{ s.risk }}</span></p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if ai_summary %}
+    <h4 class="mt-5 text-info">AI Security Analyst Summary</h4>
+    <div class="card border-info">
+      <div class="card-body bg-dark text-white">
+        <pre style="white-space: pre-wrap;">{{ ai_summary }}</pre>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}XSS Scanner - DefendersLab{% endblock %}
+
+{% block content %}
+  <div class="text-light">
+    <h2 class="page-title">XSS Scanner</h2>
+    <form method="POST" class="mb-4">
+      <div class="mb-3">
+        <label for="url" class="form-label">Enter URL to scan:</label>
+        <input type="url" class="form-control" id="url" name="url" required>
+      </div>
+      <button type="submit" class="btn btn-outline-info">Scan</button>
+    </form>
+
+    {% if results %}
+      <h4>Scan Results:</h4>
+      <ul class="list-group">
+        {% for result in results %}
+          <li class="list-group-item bg-dark text-white">
+            <strong>{{ result.url }}</strong> - 
+            {% if result.vulnerable %}
+              <span class="text-danger">VULNERABLE with payload: {{ result.payload }}</span>
+            {% else %}
+              <span class="text-success">Not vulnerable</span>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>XSS Scan Results</title></head>
+<body>
+  <h2>XSS Scan Results for {{ url }}</h2>
+
+  {% if results[0]['vulnerable'] %}
+    <ul>
+      {% for res in results %}
+        <li>
+          🚨 Vulnerability found with payload:
+          <code>{{ res.payload }}</code><br>
+          Submitted to: <strong>{{ res.form.action }}</strong>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>✅ No reflected XSS found.</p>
+  {% endif %}
+
+  <a href="/">Back to home</a>
+</body>
+</html>
